@@ -18,6 +18,7 @@ import {
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
+import { remarkReadingTime } from "./src/utils/remark-reading-time.ts";
 
 export default defineConfig({
   site: config.site.url,
@@ -38,6 +39,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [
+        remarkReadingTime,
         remarkToc,
         [remarkCollapse, { test: "Table of contents" }],
       ],
