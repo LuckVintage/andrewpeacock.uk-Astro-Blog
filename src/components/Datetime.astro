@@ -15,6 +15,7 @@ type Props = {
   pubDatetime: string | Date;
   timezone?: string;
   modDatetime?: string | Date | null;
+  readingTime?: string; // 1. Add readingTime to the TypeScript types
 };
 
 const {
@@ -23,6 +24,7 @@ const {
   size = "sm",
   class: className = "",
   timezone: postTimezone,
+  readingTime, // 2. Catch the new prop here
 } = Astro.props;
 
 const t = useTranslations(Astro.currentLocale);
@@ -58,4 +60,16 @@ const date = datetime.format("D MMM, YYYY");
   >
     {date}
   </time>
+
+  {/* 3. Output the dynamic reading time metric right next to the date layout */}
+  {
+    readingTime && (
+      <>
+        <span aria-hidden="true" class="opacity-50">•</span>
+        <span class:list={["text-sm italic", { "sm:text-base": size === "lg" }]}>
+          {readingTime}
+        </span>
+      </>
+    )
+  }
 </div>

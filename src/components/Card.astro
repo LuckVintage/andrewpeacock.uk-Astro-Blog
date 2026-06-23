@@ -3,14 +3,19 @@ import type { CollectionEntry } from "astro:content";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { toTransitionName } from "@/utils/toTransitionName";
 import Datetime from "./Datetime.astro";
+import { render } from "astro:content"; // 1. Bring in the official content compiler tool
 
 type Props = {
   variant?: "h2" | "h3";
 } & CollectionEntry<"posts">;
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
-
+const post = Astro.props;
+const { variant: Heading = "h2", id, data, filePath } = post;
 const { title, description, ...props } = data;
+
+// 2. Instruct Astro to run the remark processing engine right here
+const { remarkPluginFrontmatter } = await render(post);
+const readingTime = remarkPluginFrontmatter?.readingTime;
 ---
 
 <li class="my-6">
@@ -26,6 +31,9 @@ const { title, description, ...props } = data;
       {title}
     </Heading>
   </a>
-  <Datetime {...props} />
+  
+  {/* 3. Pass down the extracted runtime string variables */}
+  <Datetime {...props} readingTime={readingTime} />
+  
   <p>{description}</p>
 </li>

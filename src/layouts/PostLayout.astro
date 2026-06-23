@@ -9,11 +9,13 @@ type Props = {
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  readingTime?: string; // 1. Add readingTime to the TypeScript types
 };
 
 const { site } = config;
 
-const { title, description, ogImage, canonicalURL, pubDatetime, modDatetime } =
+// 2. Destructure readingTime from Astro.props
+const { title, description, ogImage, canonicalURL, pubDatetime, modDatetime, readingTime } =
   Astro.props;
 
 const structuredData = {
@@ -23,6 +25,8 @@ const structuredData = {
   image: ogImage,
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
+  // 3. Optional: Add it to Schema.org structured data for search engine snippets
+  ...(readingTime && { timeRequired: readingTime }), 
   author: [
     {
       "@type": "Person",
@@ -35,7 +39,6 @@ const structuredData = {
 
 <Layout {title} {description} {ogImage} {canonicalURL}>
   <Fragment slot="head">
-    <!-- Override og:type for article pages -->
     <meta property="og:type" content="article" />
 
     {
